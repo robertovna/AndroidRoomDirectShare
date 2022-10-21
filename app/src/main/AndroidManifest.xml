@@ -34,7 +34,20 @@
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
-
+        <activity
+            android:name=".SendMessageActivity"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:theme="@style/DirectShareDialogTheme">
+            <!-- This activity can respond to Intents of ACTION_SEND and with text/plain data -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SelectContactActivity"
+            android:theme="@style/DirectShareDialogTheme" />
     </application>
-
 </manifest>
