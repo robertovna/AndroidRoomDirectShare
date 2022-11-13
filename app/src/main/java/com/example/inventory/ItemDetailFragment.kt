@@ -22,6 +22,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -56,19 +57,22 @@ class ItemDetailFragment : Fragment() {
         return binding.root
     }
     private fun bind(item: Item) {
+        var settings = viewModel.settings.getSettings()
         binding.apply {
             itemName.text = item.itemName
             itemPrice.text = item.getFormattedPrice()
             itemCount.text = item.quantityInStock.toString()
-            nameProvider.text = item.nameProvider
-            emailProvider.text = item.emailProvider
-            phoneProvider.text = item.phoneNumberProvider
+            nameProvider.text = if (settings.hideSensitiveData) "***" else item.nameProvider
+            emailProvider.text = if (settings.hideSensitiveData) "***" else item.emailProvider
+            phoneProvider.text = if (settings.hideSensitiveData) "***" else item.phoneNumberProvider
             source.text = item.source
             sellItem.isEnabled = viewModel.isStockAvailable(item)
             sellItem.setOnClickListener { viewModel.sellItem(item) }
             deleteItem.setOnClickListener { showConfirmationDialog() }
             editItem.setOnClickListener { editItem() }
             share.setOnClickListener { shareItem() }
+            if (viewModel.settings.getSettings().disableShareData)
+                share.isEnabled = false
         }
     }
 
@@ -91,14 +95,15 @@ class ItemDetailFragment : Fragment() {
     }
 
     private fun shareItem() {
+        var settings = viewModel.settings.getSettings()
         val sharingIntent = Intent(Intent.ACTION_SEND)
         sharingIntent.type = "text/plain"
         var text = "Name: " + item.itemName + "\n"
         text += "Price: " + item.itemPrice.toString() + "\n"
         text += "Quantity in stock: " + item.quantityInStock.toString() + "\n"
-        text += "Provider Name: " + item.nameProvider + "\n"
-        text += "Provider Email: " + item.emailProvider + "\n"
-        text += "Provider Phone: " + item.phoneNumberProvider + "\n"
+        text += "Provider Name: " + if (settings.hideSensitiveData) "***" else item.nameProvider + "\n"
+        text += "Provider Email: " + if (settings.hideSensitiveData) "***" else item.emailProvider + "\n"
+        text += "Provider Phone: " + if (settings.hideSensitiveData) "***" else item.phoneNumberProvider + "\n"
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, text)
 
         startActivity(Intent.createChooser(sharingIntent, null))

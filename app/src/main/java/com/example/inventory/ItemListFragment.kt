@@ -72,5 +72,6 @@ class ItemListFragment : Fragment() {
             val action = ItemListFragmentDirections.actionItemListFragmentToSettingsFragment()
             this.findNavController().navigate(action)
         }
+        viewModel.settings.init(requireContext())
     }
 }

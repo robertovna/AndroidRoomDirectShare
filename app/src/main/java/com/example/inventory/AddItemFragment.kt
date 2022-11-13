@@ -60,6 +60,7 @@ class AddItemFragment : Fragment() {
     }
 
     private fun isEntryValid(): Boolean {
+        val settings = viewModel.settings.getSettings()
         val itemName = binding.itemName.text.toString()
         val itemPrice = binding.itemPrice.text.toString()
         val itemCount = binding.itemCount.text.toString()
@@ -81,31 +82,41 @@ class AddItemFragment : Fragment() {
             isValid = false
         }
         if (nameProvider.isNullOrBlank()) {
-            binding.nameProvider.error = "Empty name provider"
-            isValid = false
+            if (!settings.isSetDefaultValues || settings.isSetDefaultValues && settings.defaultProviderName.isNullOrBlank()) {
+                binding.nameProvider.error = "Empty name provider"
+                isValid = false
+            }
         }
-        if (!Patterns.EMAIL_ADDRESS.matcher(emailProvider).matches()) {
-            binding.emailProvider.error = "Incorrect email"
-            isValid = false
+        if (!Patterns.EMAIL_ADDRESS.matcher(emailProvider).matches() ) {
+            if (!settings.isSetDefaultValues || settings.isSetDefaultValues && settings.defaultProviderEmail.isNullOrBlank()) {
+                binding.emailProvider.error = "Incorrect email"
+                isValid = false
+            }
         }
-        if (!Patterns.PHONE.matcher(phoneProvider).matches()) {
-            binding.phoneProvider.error = "Incorrect phone"
-            isValid = false
+        if (!Patterns.PHONE.matcher(phoneProvider).matches() ) {
+            if (!settings.isSetDefaultValues || settings.isSetDefaultValues && settings.defaultProviderPhoneNumber.isNullOrBlank()) {
+                binding.phoneProvider.error = "Incorrect phone"
+                isValid = false
+            }
         }
 
         return isValid
-        return viewModel.isEntryValid(
-            binding.itemName.text.toString(),
-            binding.itemPrice.text.toString(),
-            binding.itemCount.text.toString(),
-            binding.nameProvider.text.toString(),
-            binding.emailProvider.text.toString(),
-            binding.phoneProvider.text.toString(),
-        )
     }
 
     private fun addNewItem() {
         if (isEntryValid()) {
+            val settings = viewModel.settings.getSettings()
+            var nameProvider = this.binding.nameProvider.text.toString()
+            var emailProvider = this.binding.emailProvider.text.toString()
+            var phoneProvider = this.binding.phoneProvider.text.toString()
+            if (settings.isSetDefaultValues) {
+                if (nameProvider.isNullOrBlank())
+                    this.binding.nameProvider.setText(settings.defaultProviderName)
+                if (emailProvider.isNullOrBlank())
+                    this.binding.emailProvider.setText(settings.defaultProviderEmail)
+                if (phoneProvider.isNullOrBlank())
+                    this.binding.phoneProvider.setText(settings.defaultProviderPhoneNumber)
+            }
             viewModel.addNewItem(
                 binding.itemName.text.toString(),
                 binding.itemPrice.text.toString(),
@@ -122,6 +133,18 @@ class AddItemFragment : Fragment() {
 
     private fun updateItem() {
         if (isEntryValid()) {
+            val settings = viewModel.settings.getSettings()
+            var nameProvider = this.binding.nameProvider.text.toString()
+            var emailProvider = this.binding.emailProvider.text.toString()
+            var phoneProvider = this.binding.phoneProvider.text.toString()
+            if (settings.isSetDefaultValues) {
+                if (nameProvider.isNullOrBlank())
+                    this.binding.nameProvider.setText(settings.defaultProviderName)
+                if (emailProvider.isNullOrBlank())
+                    this.binding.emailProvider.setText(settings.defaultProviderEmail)
+                if (phoneProvider.isNullOrBlank())
+                    this.binding.phoneProvider.setText(settings.defaultProviderPhoneNumber)
+            }
             viewModel.updateItem(
                 this.navigationArgs.itemId,
                 this.binding.itemName.text.toString(),
@@ -159,6 +182,12 @@ class AddItemFragment : Fragment() {
                 bind(item)
             }
         } else {
+            val settings = viewModel.settings.getSettings()
+            if (settings.isSetDefaultValues) {
+                this.binding.nameProvider.setText(settings.defaultProviderName)
+                this.binding.emailProvider.setText(settings.defaultProviderEmail)
+                this.binding.phoneProvider.setText(settings.defaultProviderPhoneNumber)
+            }
             binding.saveAction.setOnClickListener {
                 addNewItem()
             }

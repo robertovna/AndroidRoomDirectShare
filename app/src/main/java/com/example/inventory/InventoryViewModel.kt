@@ -3,10 +3,12 @@ package com.example.inventory
 import androidx.lifecycle.*
 import com.example.inventory.data.Item
 import com.example.inventory.data.ItemDao
+import com.example.inventory.encrypt.EncryptedSettings
 import kotlinx.coroutines.launch
 
 class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
     val allItems: LiveData<List<Item>> = itemDao.getItems().asLiveData()
+    val settings: EncryptedSettings = EncryptedSettings()
 
     private fun insertItem(item: Item) {
         viewModelScope.launch {
