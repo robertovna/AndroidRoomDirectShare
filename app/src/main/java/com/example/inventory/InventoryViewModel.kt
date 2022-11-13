@@ -14,14 +14,15 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
         }
     }
 
-    private fun getNewItemEntry(itemName: String, itemPrice: String, itemCount: String, nameProvider: String, emailProvider: String, phoneProvider: String): Item {
+    private fun getNewItemEntry(itemName: String, itemPrice: String, itemCount: String, nameProvider: String, emailProvider: String, phoneProvider: String, source: String): Item {
         return Item(
             itemName = itemName,
             itemPrice = itemPrice.toDouble(),
             quantityInStock = itemCount.toInt(),
             nameProvider = nameProvider,
             emailProvider = emailProvider,
-            phoneNumberProvider = phoneProvider
+            phoneNumberProvider = phoneProvider,
+            source = source
         )
     }
 
@@ -37,7 +38,8 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
         itemCount: String,
         nameProvider: String,
         emailProvider: String,
-        phoneProvider: String
+        phoneProvider: String,
+        source: String
     ): Item {
         return Item(
             id = itemId,
@@ -47,6 +49,7 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
             nameProvider = nameProvider,
             emailProvider = emailProvider,
             phoneNumberProvider = phoneProvider,
+            source = source
         )
     }
 
@@ -61,8 +64,8 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
         return (item.quantityInStock > 0)
     }
 
-    fun addNewItem(itemName: String, itemPrice: String, itemCount: String, nameProvider: String, emailProvider: String, phoneProvider: String) {
-        val newItem = getNewItemEntry(itemName, itemPrice, itemCount, nameProvider, emailProvider, phoneProvider )
+    fun addNewItem(itemName: String, itemPrice: String, itemCount: String, nameProvider: String, emailProvider: String, phoneProvider: String, source: String) {
+        val newItem = getNewItemEntry(itemName, itemPrice, itemCount, nameProvider, emailProvider, phoneProvider, source )
         insertItem(newItem)
     }
 
@@ -73,9 +76,10 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
         itemCount: String,
         nameProvider: String,
         emailProvider: String,
-        phoneProvider: String
+        phoneProvider: String,
+        source: String
     ) {
-        val updatedItem = getUpdatedItemEntry(itemId, itemName, itemPrice, itemCount, nameProvider, emailProvider,phoneProvider)
+        val updatedItem = getUpdatedItemEntry(itemId, itemName, itemPrice, itemCount, nameProvider, emailProvider,phoneProvider, source)
         updateItem(updatedItem)
     }
 

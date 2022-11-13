@@ -112,7 +112,8 @@ class AddItemFragment : Fragment() {
                 binding.itemCount.text.toString(),
                 binding.nameProvider.text.toString(),
                 binding.emailProvider.text.toString(),
-                binding.phoneProvider.text.toString()
+                binding.phoneProvider.text.toString(),
+                "manual"
             )
             val action = AddItemFragmentDirections.actionAddItemFragmentToItemListFragment()
             findNavController().navigate(action)
@@ -129,6 +130,7 @@ class AddItemFragment : Fragment() {
                 this.binding.nameProvider.text.toString(),
                 this.binding.emailProvider.text.toString(),
                 this.binding.phoneProvider.text.toString(),
+                this.navigationArgs.itemSource
             )
             val action = AddItemFragmentDirections.actionAddItemFragmentToItemListFragment()
             findNavController().navigate(action)

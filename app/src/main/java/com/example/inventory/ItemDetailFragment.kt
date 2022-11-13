@@ -63,6 +63,7 @@ class ItemDetailFragment : Fragment() {
             nameProvider.text = item.nameProvider
             emailProvider.text = item.emailProvider
             phoneProvider.text = item.phoneNumberProvider
+            source.text = item.source
             sellItem.isEnabled = viewModel.isStockAvailable(item)
             sellItem.setOnClickListener { viewModel.sellItem(item) }
             deleteItem.setOnClickListener { showConfirmationDialog() }
@@ -83,7 +84,8 @@ class ItemDetailFragment : Fragment() {
     private fun editItem() {
         val action = ItemDetailFragmentDirections.actionItemDetailFragmentToAddItemFragment(
             getString(R.string.edit_fragment_title),
-            item.id
+            item.id,
+            item.source
         )
         this.findNavController().navigate(action)
     }

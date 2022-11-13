@@ -121,6 +121,26 @@
         app:layout_constraintTop_toBottomOf="@+id/email_provider"
         tools:text="89198918918" />
 
+    <TextView
+        android:id="@+id/source_label"
+        style="@style/Widget.Inventory.TextView"
+        android:layout_width="wrap_content"
+        android:text="Source: "
+        app:layout_constraintBaseline_toBaselineOf="@+id/source"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/source"
+        style="@style/Widget.Inventory.TextView"
+        android:layout_width="0dp"
+        android:layout_marginStart="@dimen/margin_between_elements"
+        android:layout_marginTop="@dimen/margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/name_provider_label"
+        app:layout_constraintTop_toBottomOf="@+id/phone_provider"
+        tools:text="manual" />
+
     <Button
         android:id="@+id/sell_item"
         android:layout_width="0dp"
@@ -130,7 +150,7 @@
         app:layout_constraintBottom_toTopOf="@+id/delete_item"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phone_provider" />
+        app:layout_constraintTop_toBottomOf="@+id/source" />
 
     <Button
         android:id="@+id/delete_item"
@@ -143,7 +163,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sell_item" />
 
-
     <Button
         android:id="@+id/share"
         style="?attr/materialButtonOutlinedStyle"
@@ -154,6 +173,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/delete_item" />
+
+    <Button
+        android:id="@+id/saveIntoFile"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin"
+        android:text="Save to file"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/share" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/edit_item"

@@ -20,7 +20,9 @@ data class Item(
     @ColumnInfo(name = "emailProvider")
     val emailProvider: String,
     @ColumnInfo(name = "phoneNumberProvider")
-    val phoneNumberProvider: String
+    val phoneNumberProvider: String,
+    @ColumnInfo(name = "source")
+    val source: String = "manual"
 )
 
 fun Item.getFormattedPrice(): String =
