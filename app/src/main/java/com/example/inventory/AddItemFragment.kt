@@ -15,7 +15,9 @@
  */
 package com.example.inventory
 
+import android.app.Activity
 import android.content.Context.INPUT_METHOD_SERVICE
+import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import android.view.LayoutInflater
@@ -29,11 +31,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.inventory.data.Item
 import com.example.inventory.databinding.FragmentAddItemBinding
+import com.example.inventory.encrypt.EncryptFile
 
 /**
  * Fragment to add or update an item in the Inventory database.
  */
 class AddItemFragment : Fragment() {
+    companion object {
+        const val FILE_CHOOSED = 1313
+    }
+
     private val viewModel: InventoryViewModel by activityViewModels {
         InventoryViewModelFactory(
             (activity?.application as InventoryApplication).database
@@ -170,8 +177,39 @@ class AddItemFragment : Fragment() {
             emailProvider.setText(item.emailProvider, TextView.BufferType.SPANNABLE)
             phoneProvider.setText(item.phoneNumberProvider, TextView.BufferType.SPANNABLE)
             saveAction.setOnClickListener { updateItem() }
+            loadAction.isEnabled = false
         }
     }
+
+    private fun loadItemFromFile() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/json"
+        }
+
+        startActivityForResult(intent, FILE_CHOOSED)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == FILE_CHOOSED && resultCode == Activity.RESULT_OK) {
+            data?.data?.also { uri ->
+                var item = EncryptFile.decryptItemFromFile(requireContext(), uri)
+                viewModel.addNewItem(
+                    item.itemName,
+                    item.itemPrice.toString(),
+                    item.quantityInStock.toString(),
+                    item.nameProvider,
+                    item.emailProvider,
+                    item.phoneNumberProvider,
+                    "file"
+                )
+
+                val action = AddItemFragmentDirections.actionAddItemFragmentToItemListFragment()
+                findNavController().navigate(action)
+            }
+        }
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -191,6 +229,7 @@ class AddItemFragment : Fragment() {
             binding.saveAction.setOnClickListener {
                 addNewItem()
             }
+            binding.loadAction.setOnClickListener{ loadItemFromFile() }
         }
     }
 

@@ -17,12 +17,12 @@
 package com.example.inventory
 
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -30,12 +30,17 @@ import androidx.navigation.fragment.navArgs
 import com.example.inventory.data.Item
 import com.example.inventory.data.getFormattedPrice
 import com.example.inventory.databinding.FragmentItemDetailBinding
+import com.example.inventory.encrypt.EncryptFile
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 /**
  * [ItemDetailFragment] displays the details of the selected item.
  */
 class ItemDetailFragment : Fragment() {
+    companion object {
+        const val FILE_SAVE = 1515
+    }
+
     private val navigationArgs: ItemDetailFragmentArgs by navArgs()
 
     private val viewModel: InventoryViewModel by activityViewModels {
@@ -71,8 +76,26 @@ class ItemDetailFragment : Fragment() {
             deleteItem.setOnClickListener { showConfirmationDialog() }
             editItem.setOnClickListener { editItem() }
             share.setOnClickListener { shareItem() }
+            saveIntoFile.setOnClickListener { saveItemIntoFile() }
             if (viewModel.settings.getSettings().disableShareData)
                 share.isEnabled = false
+        }
+    }
+
+    private fun saveItemIntoFile() {
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/json"
+            putExtra(Intent.EXTRA_TITLE, "${item.id}.json")
+        }
+        startActivityForResult(intent, FILE_SAVE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == FILE_SAVE && resultCode == Activity.RESULT_OK) {
+            data?.data?.also { uri ->
+                EncryptFile.encryptItemIntoFile(requireContext(), uri, item)
+            }
         }
     }
 

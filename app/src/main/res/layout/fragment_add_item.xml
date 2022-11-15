@@ -24,6 +24,15 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin">
 
+        <Button
+            android:id="@+id/load_action"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Load from file"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/item_name_label"
             android:layout_width="0dp"
@@ -32,7 +41,7 @@
             android:hint="@string/item_name_req"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/load_action">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/item_name"

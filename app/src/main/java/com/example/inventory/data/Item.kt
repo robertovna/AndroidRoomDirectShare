@@ -4,9 +4,13 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.text.NumberFormat
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
+@Serializable
 @Entity(tableName = "item")
 data class Item(
+    @Transient
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     @ColumnInfo(name = "name")
@@ -21,6 +25,7 @@ data class Item(
     val emailProvider: String,
     @ColumnInfo(name = "phoneNumberProvider")
     val phoneNumberProvider: String,
+    @Transient
     @ColumnInfo(name = "source")
     val source: String = "manual"
 )
