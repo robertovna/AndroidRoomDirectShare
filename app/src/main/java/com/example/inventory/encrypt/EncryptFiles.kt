@@ -51,6 +51,28 @@ class EncryptFile {
             }
         }
 
+        fun getEncryptedItemPathInCache(context: Context, item: Item) : File {
+            val tmpFile = File(context.cacheDir, "some.json")
+
+            if (tmpFile.exists()) {
+                tmpFile.delete()
+            }
+
+            val encryptedFile = getEncryptedFile(tmpFile, context)
+            var bytes = Json.encodeToString(item).toByteArray(StandardCharsets.UTF_8)
+
+            encryptedFile.openFileOutput().apply {
+                write(bytes)
+                flush()
+                close()
+            }
+            val newFile = File(context.cacheDir, "${item.itemName}.json")
+            if (newFile.exists())
+                newFile.delete()
+            tmpFile.copyTo(newFile)
+            return newFile
+        }
+
         fun decryptItemFromFile(context: Context, uri: Uri): Item {
             val tmpFile = File(context.cacheDir, "some.json")
 

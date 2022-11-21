@@ -23,6 +23,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -76,9 +77,12 @@ class ItemDetailFragment : Fragment() {
             deleteItem.setOnClickListener { showConfirmationDialog() }
             editItem.setOnClickListener { editItem() }
             share.setOnClickListener { shareItem() }
+            shareFile.setOnClickListener { shareItemFile() }
             saveIntoFile.setOnClickListener { saveItemIntoFile() }
-            if (viewModel.settings.getSettings().disableShareData)
+            if (viewModel.settings.getSettings().disableShareData) {
                 share.isEnabled = false
+                shareFile.isEnabled = false
+            }
         }
     }
 
@@ -129,6 +133,17 @@ class ItemDetailFragment : Fragment() {
         text += "Provider Phone: " + if (settings.hideSensitiveData) "***" else item.phoneNumberProvider + "\n"
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, text)
 
+        startActivity(Intent.createChooser(sharingIntent, null))
+    }
+
+    private fun shareItemFile() {
+        val sharingIntent = Intent(Intent.ACTION_SEND)
+        sharingIntent.type = "application/json"
+        sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        val file = EncryptFile.getEncryptedItemPathInCache(requireContext(), item)
+        val fileURI = FileProvider.getUriForFile(requireContext(), "com.example.inventory.provider", file)
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, fileURI)
+        sharingIntent.setPackage("com.google.android.gm")
         startActivity(Intent.createChooser(sharingIntent, null))
     }
 
