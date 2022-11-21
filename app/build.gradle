@@ -84,4 +84,6 @@ dependencies {
     androidTestImplementation("androidx.security:security-app-authenticator:1.0.0-alpha02")
     // serialization
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
+    def sqlcipher_version = "4.5.2"
+    implementation "net.zetetic:android-database-sqlcipher:$sqlcipher_version"
 }
